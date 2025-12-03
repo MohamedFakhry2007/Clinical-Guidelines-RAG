@@ -1,11 +1,15 @@
-fastapi
-uvicorn
+fastapi>=0.112.0
+uvicorn>=0.30.0
 python-multipart
 python-dotenv
-langchain
-langchain-community
-langchain-google-genai
-langchain-chroma
+# Pin LangChain to 0.2.x to avoid Pydantic V1 errors
+langchain<0.3.0
+langchain-community<0.3.0
+langchain-core<0.3.0
+langchain-google-genai<2.0.0
+langchain-chroma<0.2.0
 google-generativeai
 chromadb
 pypdf
+# Ensure Pydantic V2 is used but compatible
+pydantic>=2.8.0
