@@ -1,11 +1,11 @@
 # 🩺 Clinical AI Co-pilot: RAG-based Decision Support
 
-[![Live Demo](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://medical-rag-system.streamlit.app/)
-[![Backend API](https://img.shields.io/badge/API-Documentation-blue)](https://medical-rag-system.onrender.com/docs)
+[![Live Demo](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://clinical-guidelines-rag-7x7ta3rjmlfk5mi3dfcgkx.streamlit.app/)
+[![Backend API](https://img.shields.io/badge/API-Documentation-blue)](https://medical-rag-backend-zd04.onrender.com/docs)
 [![Python](https://img.shields.io/badge/Python-3.11+-blue.svg)](https://www.python.org/)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
-> **🚀 Try the Live System:** [Access the Clinical Dashboard](https://medical-rag-system.streamlit.app/)
+> **🚀 Try the Live System:** [Access the Clinical Dashboard](https://clinical-guidelines-rag-7x7ta3rjmlfk5mi3dfcgkx.streamlit.app/)
 
 ## 📖 Overview
 The **Clinical AI Co-pilot** is a Microservices-based RAG (Retrieval-Augmented Generation) system designed to assist medical professionals by retrieving and synthesizing accurate answers from approved clinical guidelines. 
@@ -88,7 +88,7 @@ graph LR
 ## 📚 API Documentation
 
 Explore the API documentation using the interactive Swagger UI:
-[API Documentation](https://medical-rag-system.onrender.com/docs)
+[API Documentation](https://medical-rag-backend-zd04.onrender.com/docs)
 
 ## 📊 Demo
 
@@ -105,14 +105,28 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 4. Push to the branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
 
-## 📄 License
+### 📄 License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the **MIT License** - see the LICENSE file for details.
 
-## ⚠️ Disclaimer
+### ⚠️ Disclaimer
 
-This system is a technical demonstration for Clinical AI Engineering. It is not a certified medical device and should not be used for real patient diagnosis or treatment without proper medical supervision and regulatory approval. Always consult with qualified healthcare professionals for medical advice.
+**Research Prototype Only:** This tool is intended for educational and research purposes to demonstrate the capabilities of Large Multimodal Models (LMMs) in healthcare. It is **not** a certified medical device and should **not** be used for primary diagnosis or patient care.
 
-## 📬 Contact
+-----
 
-For questions or feedback, please open an issue on GitHub or contact the maintainers.
+### 👨‍💻 Author
+
+**Mohamed Fakhry**
+
+  * **Role:** Clinical AI Engineer
+  * **GitHub:** [@MohamedFakhry2007](https://github.com/MohamedFakhry2007)
+  * **Email:** mohamedfakhrysmile@gmail.com
+
+### 🙏 Support
+
+If you find this project interesting for the Clinical AI space, please consider:
+
+  * ⭐ **Starring** the repository
+  * 💡 **Sharing** it with your network
+  * 🤝 **Contributing** to improve the prompt engineering
