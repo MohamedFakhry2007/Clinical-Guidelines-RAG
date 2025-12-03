@@ -1,108 +1,83 @@
-# 🩺 Clinical Guidelines RAG System
+# 🏥 Clinical AI Copilot: Medical Guidelines Assistant
 
-[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://clinical-guidelines-rag-ibsbcobwevafwaagbpiiyq.streamlit.app/)
+[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://your-streamlit-app-url.streamlit.app/)
 
-> **Try the Live Demo:** [Click Here to test the App](https://clinical-guidelines-rag-ibsbcobwevafwaagbpiiyq.streamlit.app/)
+> **Modern, Fast, and Reliable Clinical Decision Support System**
 
-## Overview
+## 🚀 Overview
 
-The **Clinical Guidelines RAG System** is a specialized Clinical Decision Support System (CDSS) designed to assist healthcare professionals by providing instant, accurate answers based strictly on approved medical protocols.
-
-Unlike generic LLMs which can "hallucinate" or invent treatments, this system utilizes **Retrieval-Augmented Generation (RAG)** to ground every response in a verified internal knowledge base. It is engineered to handle complex queries in **Arabic**, supporting medical staff in high-pressure environments like ER Triage and ICU by retrieving protocols for Sepsis, Stroke, and Hypertensive Crises.
+The **Clinical AI Copilot** is a state-of-the-art Clinical Decision Support System (CDSS) that leverages the power of **Gemini 1.5 Flash** and **ChromaDB** to provide accurate, evidence-based answers to medical queries. This system is designed to assist healthcare professionals by providing instant access to medical guidelines and protocols.
 
 ## ✨ Key Features
 
-### 1. Hallucination-Free Clinical Answers
-- **Strict RAG Implementation:** The AI is architecturally constrained to answer *only* using the retrieved context from uploaded medical PDFs/documents.
-- **Safety Fallbacks:** If a procedure is not found in the approved protocols, the system explicitly states "Information not available in protocols" rather than fabricating advice.
+### 1. Advanced RAG Architecture
+- **Semantic Search**: Utilizes ChromaDB with all-MiniLM-L6-v2 embeddings for precise document retrieval
+- **Hallucination Prevention**: Built-in faithfulness scoring to ensure answers are grounded in source material
+- **Multi-document Support**: Process and query multiple PDF documents simultaneously
 
-### 2. Specialized Medical Knowledge Base
-- **Triage & Emergency Protocols:** Pre-loaded with standard guidelines for **Chest Pain (MONA)**, **Stroke (tPA criteria)**, **Sepsis (Hour-1 Bundle)**, and **Epistaxis**.
-- **Drug Dosage & Contraindications:** Retrieves specific dosage instructions (e.g., Labetalol for Hypertensive Crisis) and safety warnings.
+### 2. Modern Tech Stack
+- **Backend**: FastAPI for high-performance API serving
+- **Vector Database**: ChromaDB for efficient document retrieval
+- **LLM**: Google Gemini 1.5 Flash for fast, accurate responses
+- **Frontend**: Streamlit for an intuitive, responsive UI
 
-### 3. Arabic Medical NLP
-- **Native Arabic Support:** Optimized to process and generate complex medical terminology in Arabic while maintaining English clinical acronyms (e.g., ECG, CT, IV).
-- **RTL Interface:** A clean, dark-mode UI fully optimized for Right-to-Left languages using Bootstrap 5 RTL.
+### 3. Professional Features
+- **Source Citation**: Every claim is backed by specific document references
+- **Confidence Scoring**: Visual indicators of answer reliability
+- **Document Management**: Easy upload and processing of new guidelines
+- **Session Persistence**: Maintains conversation context
 
-### 4. Lightweight Vector Search
-- **TF-IDF & Cosine Similarity:** Implements an efficient, in-memory retrieval engine using Scikit-Learn, ensuring sub-second retrieval latency without the need for heavy external vector databases.
+## 🏗️ Architecture
 
-## 🛠️ Technical Architecture
-
-### Backend
-- **Python 3.11+**
-- **Flask:** Lightweight web server handling API requests.
-- **Google Gemini 1.5 Pro:** The LLM engine used for synthesis and reasoning.
-- **Scikit-Learn:** Used for TF-IDF vectorization and cosine similarity calculations.
-- **SQLite:** Stores chat logs and metadata for audit trails.
-
-### Frontend
-- **Jinja2 Templates:** Server-side rendering for speed and security.
-- **Bootstrap 5 RTL:** Responsive, mobile-friendly clinical dashboard.
-- **Vanilla JS:** Handles asynchronous chat interactions and typing animations.
+```
+clinical-ai-copilot/
+├── backend/                 # FastAPI Service
+│   ├── app.py              # Main API endpoints
+│   ├── rag_engine.py       # RAG implementation
+│   ├── models.py           # Data models
+│   └── requirements.txt    # Python dependencies
+├── frontend/               # Streamlit UI
+│   ├── streamlit_app.py    # User interface
+│   └── requirements.txt    # Frontend dependencies
+└── README.md               # This file
+```
 
 ## 🚀 Quick Start
 
 ### Prerequisites
-- **Python 3.11+**
-- **Poetry** (dependency management) - [Install Poetry](https://python-poetry.org/docs/)
-- **Google Gemini API Key** (Get one from [Google AI Studio](https://aistudio.google.com/))
+- Python 3.9+
+- Google Gemini API Key (Get one from [Google AI Studio](https://aistudio.google.com/))
 
-### 1. Clone and Setup
+### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/MohamedFakhry2007/Clinical-Guidelines-RAG.git
-cd Clinical-Guidelines-RAG
-poetry install
+git clone https://github.com/yourusername/clinical-ai-copilot.git
+cd clinical-ai-copilot
 ```
 
-### 2. Configure Environment
-
-Create a `.env` file from the example and add your API key:
+### 2. Set Up Backend
 
 ```bash
+# Navigate to backend directory
+cd backend
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Set up environment variables
 cp .env.example .env
+# Edit .env with your Gemini API key
 ```
 
-Edit `.env`:
+### 3. Set Up Frontend
 
-```
-GEMINI_API_KEY=your_actual_api_key_here
-LOG_LEVEL=DEBUG
-```
-
-### 3. Initialize & Run
-
-This command will automatically populate the database with the medical protocols if it's empty.
-
-**Windows (PowerShell) - Force UTF-8 for Arabic logs:**
-```powershell
-$env:PYTHONIOENCODING = "utf-8"
-poetry run start
-```
-
-**Linux / Mac:**
 ```bash
-poetry run start
+# Navigate to frontend directory
+cd ../frontend
+
+# Install dependencies
+pip install -r requirements.txt
 ```
-
-Visit `http://localhost:5000` to access the system.
-
-## 📖 Usage Scenarios
-
-Try asking these clinical questions (in Arabic):
-
-- **Sepsis:** "ما هو بروتوكول علاج الإنتان؟" (What is the sepsis protocol?)
-- **Stroke:** "متى نعطي tPA لمريض الجلطة؟" (When to give tPA for stroke patient?)
-- **Emergency:** "ماذا أفعل مع مريض ضغط مزمن أتى بنزيف من الأنف؟" (How to manage hypertensive epistaxis?)
-
-## 📋 Project Structure
-
-```
-Clinical-Guidelines-RAG/
-├── clinical_chatbot/       # Main Package
-│   ├── data/              # Medical Protocols (The Knowledge Base)
-│   ├── static/            # CSS (RTL), JS
 │   ├── templates/         # HTML Interface
 │   ├── rag.py             # RAG Logic (Retrieval & Generation)
 │   ├── database.py        # SQLite Operations
