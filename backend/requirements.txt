@@ -2,9 +2,9 @@ fastapi
 uvicorn
 python-multipart
 python-dotenv
-# The heavy ML libs (torch, transformers) are GONE
 langchain
 langchain-community
-langchain-google-genai  # We use this for BOTH LLM and Embeddings
+langchain-google-genai
+langchain-chroma
 chromadb
 pypdf
