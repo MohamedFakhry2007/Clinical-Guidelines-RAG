@@ -7,11 +7,13 @@ import streamlit as st
 from datetime import datetime
 from dotenv import load_dotenv
 
-# Load environment variables
-load_dotenv()
-
-# Configuration
-API_URL = os.getenv("BACKEND_API_URL", "http://localhost:8000")
+# Try to load from Streamlit secrets first, then environment variables, then default
+API_URL = "http://localhost:8000"
+try:
+    API_URL = st.secrets.get("API_URL", os.getenv("BACKEND_API_URL", API_URL))
+except FileNotFoundError:
+    # Fallback for local development if secrets.toml is not found
+    API_URL = os.getenv("BACKEND_API_URL", API_URL)
 APP_TITLE = "🩺 Clinical AI Co-pilot"
 APP_DESCRIPTION = "Professional Clinical Decision Support System"
 VERSION = "1.0.0"

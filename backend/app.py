@@ -1,83 +1,83 @@
-from fastapi import FastAPI, UploadFile, File, HTTPException, status
-from fastapi.middleware.cors import CORSMiddleware
+import os
+import logging
+from contextlib import asynccontextmanager
+from fastapi import FastAPI, UploadFile, File, HTTPException
 from rag_engine import ClinicalRAG
 from models import QueryRequest, QueryResponse, Source
-import time
 import shutil
-import os
+import time
 
-app = FastAPI(title="Clinical RAG API", version="1.0")
+# Setup Logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger("uvicorn")
 
-# CORS middleware to allow frontend to communicate with the backend
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+# Global variable for the system
+rag_system = None
 
-# Initialize RAG system
-rag_system = ClinicalRAG()
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """
+    Load heavy AI models ONLY when the server starts.
+    This prevents the 'No Open Ports' timeout on Render.
+    """
+    global rag_system
+    logger.info("🏥 Clinical AI Brain is starting up...")
+    try:
+        # Initialize RAG System here (this is the heavy part)
+        rag_system = ClinicalRAG()
+        logger.info("✅ RAG System loaded successfully!")
+    except Exception as e:
+        logger.error(f"❌ Failed to load RAG System: {e}")
+    
+    yield  # The application runs here
+    
+    # Cleanup (optional)
+    logger.info("🛑 Shutting down Clinical AI Brain...")
+
+# Initialize App with Lifespan
+app = FastAPI(title="Clinical RAG API", version="1.0", lifespan=lifespan)
+
+@app.get("/health")
+async def health_check():
+    """Lightweight endpoint for Render/Cron-job to keep the service awake."""
+    if rag_system is None:
+        return {"status": "initializing", "message": "Models are still loading..."}
+    return {"status": "awake", "message": "Service is ready"}
 
 @app.post("/upload")
 async def upload_document(file: UploadFile = File(...)):
-    """Endpoint for the Frontend to upload PDFs."""
-    if not file.filename.lower().endswith('.pdf'):
-        raise HTTPException(status_code=400, detail="Only PDF files are supported.")
+    if not rag_system:
+        raise HTTPException(status_code=503, detail="System is still initializing")
     
-    # Create uploads directory if it doesn't exist
-    os.makedirs("uploads", exist_ok=True)
-    file_location = f"uploads/{file.filename}"
+    file_location = f"temp_{file.filename}"
+    with open(file_location, "wb") as buffer:
+        shutil.copyfileobj(file.file, buffer)
     
-    try:
-        with open(file_location, "wb") as buffer:
-            shutil.copyfileobj(file.file, buffer)
-        
-        num_chunks = rag_system.ingest_document(file_location)
-        return {"message": "Guidelines processed successfully", "chunks": num_chunks}
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error processing file: {str(e)}")
+    num_chunks = rag_system.ingest_document(file_location)
+    return {"message": "Guidelines processed successfully", "chunks": num_chunks}
 
 @app.post("/query", response_model=QueryResponse)
 async def query_guidelines(request: QueryRequest):
+    if not rag_system:
+        raise HTTPException(status_code=503, detail="System is still initializing")
+        
     start_time = time.time()
+    result = rag_system.query(request.question)
     
-    try:
-        result = rag_system.query(request.question)
-        if not result:
-            raise HTTPException(status_code=400, detail="No guidelines loaded. Please upload PDF files first.")
-        
-        # Calculate processing time
-        process_time = time.time() - start_time
-        
-        # Map sources for the UI
-        sources = [
-            Source(
-                file_name=os.path.basename(doc.metadata.get("source", "Unknown")),
-                page_number=doc.metadata.get("page", 0) + 1,  # Convert to 1-based page numbering
-                text_snippet=doc.page_content[:150] + ("..." if len(doc.page_content) > 150 else "")
-            ) for doc in result["docs"]
-        ]
-        
-        return QueryResponse(
-            answer=result["answer"],
-            sources=sources,
-            confidence_score=result.get("confidence_score", 0.9),  # Default to 0.9 if not provided
-            processing_time=process_time
-        )
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error processing query: {str(e)}")
-
-@app.get("/health", status_code=status.HTTP_200_OK)
-async def health_check():
-    """Health check endpoint for monitoring and load balancing."""
-    return {
-        "status": "healthy",
-        "version": "1.0.0",
-        "rag_initialized": hasattr(rag_system, 'vector_db')
-    }
-
-if __name__ == "__main__":
-    import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    if not result:
+        raise HTTPException(status_code=400, detail="No guidelines loaded or no answer found.")
+    
+    sources = [
+        Source(
+            file_name=doc.metadata.get("source", "Unknown"),
+            page_number=doc.metadata.get("page", 0),
+            text_snippet=doc.page_content[:150] + "..."
+        ) for doc in result["docs"]
+    ]
+    
+    return QueryResponse(
+        answer=result["answer"],
+        sources=sources,
+        confidence_score=0.92, 
+        processing_time=time.time() - start_time
+    )

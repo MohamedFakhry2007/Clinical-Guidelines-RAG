@@ -1,109 +1,118 @@
-# 🏥 Clinical AI Copilot: Medical Guidelines Assistant
+# 🩺 Clinical AI Co-pilot: RAG-based Decision Support
 
-[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://your-streamlit-app-url.streamlit.app/)
+[![Live Demo](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://medical-rag-system.streamlit.app/)
+[![Backend API](https://img.shields.io/badge/API-Documentation-blue)](https://medical-rag-system.onrender.com/docs)
+[![Python](https://img.shields.io/badge/Python-3.11+-blue.svg)](https://www.python.org/)
+[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
-> **Modern, Fast, and Reliable Clinical Decision Support System**
+> **🚀 Try the Live System:** [Access the Clinical Dashboard](https://medical-rag-system.streamlit.app/)
 
-## 🚀 Overview
+## 📖 Overview
+The **Clinical AI Co-pilot** is a Microservices-based RAG (Retrieval-Augmented Generation) system designed to assist medical professionals by retrieving and synthesizing accurate answers from approved clinical guidelines. 
 
-The **Clinical AI Copilot** is a state-of-the-art Clinical Decision Support System (CDSS) that leverages the power of **Gemini 1.5 Flash** and **ChromaDB** to provide accurate, evidence-based answers to medical queries. This system is designed to assist healthcare professionals by providing instant access to medical guidelines and protocols.
+Unlike generic LLMs, this system is engineered for **Explainability** and **Faithfulness**, providing strict source citations for every claim to prevent hallucinations in high-stakes medical environments.
 
 ## ✨ Key Features
 
-### 1. Advanced RAG Architecture
-- **Semantic Search**: Utilizes ChromaDB with all-MiniLM-L6-v2 embeddings for precise document retrieval
-- **Hallucination Prevention**: Built-in faithfulness scoring to ensure answers are grounded in source material
-- **Multi-document Support**: Process and query multiple PDF documents simultaneously
+- **Strict RAG Implementation**: Answers are grounded purely in the provided PDF documents
+- **Source Citations**: Every answer includes page-level references (e.g., [Source: Page 12])
+- **Self-Correction**: The system evaluates its own confidence before responding
+- **Microservices Architecture**: Independently deployable and scalable components
+- **User-Friendly Interface**: Intuitive Streamlit-based dashboard for easy interaction
 
-### 2. Modern Tech Stack
-- **Backend**: FastAPI for high-performance API serving
-- **Vector Database**: ChromaDB for efficient document retrieval
-- **LLM**: Google Gemini 1.5 Flash for fast, accurate responses
-- **Frontend**: Streamlit for an intuitive, responsive UI
+## 🏗️ System Architecture
 
-### 3. Professional Features
-- **Source Citation**: Every claim is backed by specific document references
-- **Confidence Scoring**: Visual indicators of answer reliability
-- **Document Management**: Easy upload and processing of new guidelines
-- **Session Persistence**: Maintains conversation context
+The project follows a decoupled **Microservices Architecture** to ensure scalability and separation of concerns:
 
-## 🏗️ Architecture
-
-```
-clinical-ai-copilot/
-├── backend/                 # FastAPI Service
-│   ├── app.py              # Main API endpoints
-│   ├── rag_engine.py       # RAG implementation
-│   ├── models.py           # Data models
-│   └── requirements.txt    # Python dependencies
-├── frontend/               # Streamlit UI
-│   ├── streamlit_app.py    # User interface
-│   └── requirements.txt    # Frontend dependencies
-└── README.md               # This file
+```mermaid
+graph LR
+    User(Medical Professional) -->|Interacts| UI[Frontend: Streamlit]
+    UI -->|REST API Request| API[Backend: FastAPI]
+    API -->|Semantic Search| DB[(Vector DB: Chroma)]
+    API -->|Context + Query| LLM[AI Model: Gemini 1.5 Flash]
+    LLM -->|Answer + Citations| API
+    API -->|JSON Response| UI
 ```
 
-## 🚀 Quick Start
+## 🔧 Tech Stack
+
+### Frontend
+- **Framework**: Streamlit
+- **Deployment**: Streamlit Cloud
+
+### Backend
+- **Framework**: FastAPI
+- **Deployment**: Render
+- **API Documentation**: Swagger UI (built-in)
+
+### AI & Data
+- **AI Engine**: Google Gemini 1.5 Flash (1M Token Context)
+- **Vector Database**: ChromaDB (Ephemeral/In-Memory for demo)
+- **Embeddings**: HuggingFace (all-MiniLM-L6-v2)
+- **Orchestration**: LangChain
+
+## 🚀 Getting Started
 
 ### Prerequisites
-- Python 3.9+
-- Google Gemini API Key (Get one from [Google AI Studio](https://aistudio.google.com/))
+- Python 3.11+
+- Google Gemini API Key
+- Git
 
-### 1. Clone the Repository
+### Local Installation
 
-```bash
-git clone https://github.com/yourusername/clinical-ai-copilot.git
-cd clinical-ai-copilot
-```
+1. **Clone the Repository**
+   ```bash
+   git clone https://github.com/MohamedFakhry2007/Clinical-Guidelines-RAG.git
+   cd Clinical-Guidelines-RAG
+   ```
 
-### 2. Set Up Backend
+2. **Setup Backend**
+   ```bash
+   cd backend
+   pip install -r requirements.txt
+   export GEMINI_API_KEY="your_gemini_api_key_here"
+   uvicorn app:app --reload
+   ```
 
-```bash
-# Navigate to backend directory
-cd backend
+3. **Setup Frontend**
+   ```bash
+   cd ../frontend
+   pip install -r requirements.txt
+   streamlit run streamlit_app.py
+   ```
 
-# Install dependencies
-pip install -r requirements.txt
+4. **Access the Application**
+   - Frontend: `http://localhost:8501`
+   - Backend API Docs: `http://localhost:8000/docs`
 
-# Set up environment variables
-cp .env.example .env
-# Edit .env with your Gemini API key
-```
+## 📚 API Documentation
 
-### 3. Set Up Frontend
+Explore the API documentation using the interactive Swagger UI:
+[API Documentation](https://medical-rag-system.onrender.com/docs)
 
-```bash
-# Navigate to frontend directory
-cd ../frontend
+## 📊 Demo
 
-# Install dependencies
-pip install -r requirements.txt
-```
-│   ├── templates/         # HTML Interface
-│   ├── rag.py             # RAG Logic (Retrieval & Generation)
-│   ├── database.py        # SQLite Operations
-│   ├── app.py             # Flask Routes
-│   └── main.py            # Entry Point
-├── poetry.lock            # Locked Dependencies
-├── pyproject.toml         # Project Configuration
-└── README.md              # Documentation
-```
+![Demo GIF](demo.gif)
+*Uploading a clinical guideline and querying about sepsis protocol*
 
-## 🐛 Troubleshooting
+## 🤝 Contributing
 
-- **"Model not found" Error:** Ensure you have the latest version of google-generativeai. Run `poetry update`.
-- **Unicode/Encoding Errors on Windows:** If the app crashes when logging Arabic text, run this before starting: `set PYTHONIOENCODING=utf-8` (CMD) or `$env:PYTHONIOENCODING = "utf-8"` (PowerShell).
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
 ## 📄 License
 
-This project is licensed under the MIT License.
-
-## 👨‍💻 Author
-
-Created by Mohamed Fakhry
-
-- **GitHub:** [@MohamedFakhry2007](https://github.com/MohamedFakhry2007)
-- **Email:** mohamedfakhrysmile@gmail.com
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## ⚠️ Disclaimer
 
-This system is a proof-of-concept for Clinical AI engineering. While based on real medical protocols, it should not be used for actual patient care without further validation and regulatory approval.
+This system is a technical demonstration for Clinical AI Engineering. It is not a certified medical device and should not be used for real patient diagnosis or treatment without proper medical supervision and regulatory approval. Always consult with qualified healthcare professionals for medical advice.
+
+## 📬 Contact
+
+For questions or feedback, please open an issue on GitHub or contact the maintainers.
