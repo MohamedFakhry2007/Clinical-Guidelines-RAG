@@ -1,5 +1,9 @@
 # 🩺 Clinical Guidelines RAG System
 
+[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://clinical-guidelines-rag-ibsbcobwevafwaagbpiiyq.streamlit.app/)
+
+> **Try the Live Demo:** [Click Here to test the App](https://clinical-guidelines-rag-ibsbcobwevafwaagbpiiyq.streamlit.app/)
+
 ## Overview
 
 The **Clinical Guidelines RAG System** is a specialized Clinical Decision Support System (CDSS) designed to assist healthcare professionals by providing instant, accurate answers based strictly on approved medical protocols.
